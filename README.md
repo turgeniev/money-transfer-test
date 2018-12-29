@@ -34,7 +34,7 @@ For example: `http://localhost:7777/v1/accounts`
 
 To specify another port pass it as command line argument:
 
-    ./gradlew run --args ç8080
+    ./gradlew run --args 8080
 
 ### 3. How to use
 
