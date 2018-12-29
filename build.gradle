@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'application'
+}
+
+group 'com.revolut'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    implementation 'io.netty:netty-all:4.1.32.Final'
+
+    final def jerseyVer = '2.27'
+    testImplementation "org.glassfish.jersey.core:jersey-client:${jerseyVer}"
+    testImplementation "org.glassfish.jersey.inject:jersey-hk2:${jerseyVer}"
+    testImplementation "org.glassfish.jersey.media:jersey-media-json-jackson:${jerseyVer}"
+
+    final def junit5ver = '5.1.1'
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junit5ver}"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:${junit5ver}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junit5ver}"
+}
+
+application {
+    mainClassName = "com.revolut.account.Application"
+}
+
+// ======= tests
+test {
+    // enable JUnit5 support, see https://junit.org/junit5/docs/current/user-guide/#running-tests-build-gradle
+    useJUnitPlatform()
+}
+
+// ======= test coverage
+jacocoTestReport {
+    reports {
+        html.enabled true
+    }
+}
+
+// coverage task, dependencies: coverage -> jacocoTestReport -> test
+jacocoTestReport.dependsOn test
+task coverage(dependsOn: jacocoTestReport) {
+    description 'Runs tests and generates coverage report in ./build/reports/jacoco'
+}
