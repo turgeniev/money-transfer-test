@@ -4,6 +4,10 @@ plugins {
     id 'application'
 }
 
+jacoco {
+    toolVersion = "0.8.2"
+}
+
 group 'com.revolut'
 version '1.0-SNAPSHOT'
 
@@ -15,12 +19,18 @@ repositories {
 
 dependencies {
 
-    implementation 'io.netty:netty-all:4.1.32.Final'
+    final def jerseyVer = '2.29.1'
+    implementation "org.glassfish.jersey.containers:jersey-container-jetty-http:${jerseyVer}"
+    implementation "org.glassfish.jersey.media:jersey-media-json-jackson:${jerseyVer}"
+    implementation "org.glassfish.jersey.inject:jersey-hk2:${jerseyVer}"
+    // JAX-B dependencies for JDK 9+
+    final def jaxbVer = '2.2.11'
+    implementation "javax.xml.bind:jaxb-api:${jaxbVer}"
+    implementation "com.sun.xml.bind:jaxb-core:${jaxbVer}"
+    implementation "com.sun.xml.bind:jaxb-impl:${jaxbVer}"
+    implementation "javax.activation:activation:1.1.1"
 
-    final def jerseyVer = '2.27'
     testImplementation "org.glassfish.jersey.core:jersey-client:${jerseyVer}"
-    testImplementation "org.glassfish.jersey.inject:jersey-hk2:${jerseyVer}"
-    testImplementation "org.glassfish.jersey.media:jersey-media-json-jackson:${jerseyVer}"
 
     final def junit5ver = '5.1.1'
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junit5ver}"

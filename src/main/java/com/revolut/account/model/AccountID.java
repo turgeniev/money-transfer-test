@@ -5,19 +5,11 @@ import java.util.Objects;
 /**
  * ID of account.
  */
-public class AccountID implements Comparable<AccountID> {
+public class AccountID {
     private final String id;
 
     public AccountID(String id) {
         this.id = id;
-    }
-
-    @Override
-    public int compareTo(AccountID o) {
-        if (o == null) {
-            throw new NullPointerException();
-        }
-        return id.compareTo(o.id);
     }
 
     @Override

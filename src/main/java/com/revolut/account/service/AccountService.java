@@ -32,7 +32,7 @@ public interface AccountService {
      * Account must be in {@code OPEN} state.
      * Amount must be positive.
      *
-     * @param accountID
+     * @param accountID account id
      * @param amount amount of money in kopeks, cents, etc. to add to given account
      * @return information about account after the operation
      */

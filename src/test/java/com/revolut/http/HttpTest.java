@@ -2,6 +2,7 @@ package com.revolut.http;
 
 import com.revolut.account.model.AccountState;
 import com.revolut.account.model.CurrencyType;
+import com.revolut.account.resource.AccountResp;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.client.Entity;
@@ -21,7 +22,7 @@ class HttpTest extends HttpBase {
     @Test
     void createAccount_successful() {
         // When
-        RestAccount account = createAccount(CurrencyType.RUB);
+        AccountResp account = createAccount(CurrencyType.RUB);
         // Then
         assertNotNull(account.getId());
         assertEquals(CurrencyType.RUB, account.getCurrencyType());
@@ -31,20 +32,23 @@ class HttpTest extends HttpBase {
     @Test
     void getAccount_successful() {
         // Given
-        RestAccount account = createAccount(CurrencyType.RUB);
+        AccountResp account = createAccount(CurrencyType.RUB);
         // When
-        RestAccount found = getAccount(account);
+        AccountResp found = getAccount(account);
         // Then
-        assertEquals(account, found);
-    }    
+        assertEquals(account.getId(), found.getId());
+        assertEquals(account.getAmount(), found.getAmount());
+        assertEquals(account.getCurrencyType(), found.getCurrencyType());
+        assertEquals(account.getState(), found.getState());
+    }
     
     @Test
     void topUp_successful() {
         // Given
-        RestAccount account = createAccount(CurrencyType.RUB);
+        AccountResp account = createAccount(CurrencyType.RUB);
         long topUpAmount = 1000;
         // When
-        RestAccount result = topUp(account, topUpAmount);
+        AccountResp result = topUp(account, topUpAmount);
         // Then
         assertEquals(topUpAmount, result.getAmount());
     }
@@ -52,11 +56,11 @@ class HttpTest extends HttpBase {
     @Test
     void transfer_successful() {
         // Given
-        RestAccount from = createAccount(CurrencyType.RUB);
-        RestAccount to = createAccount(CurrencyType.RUB);
+        AccountResp from = createAccount(CurrencyType.RUB);
+        AccountResp to = createAccount(CurrencyType.RUB);
         topUp(from, 2000);
         // When
-        RestAccount fromResult = transfer(from, to, 300);
+        AccountResp fromResult = transfer(from, to, 300);
         // Then
         assertEquals(1700, fromResult.getAmount());
         assertEquals(300, getAccount(to).getAmount());
@@ -65,9 +69,9 @@ class HttpTest extends HttpBase {
     @Test
     void closeAccount_successful() {
         // Given
-        RestAccount account = createAccount(CurrencyType.RUB);
+        AccountResp account = createAccount(CurrencyType.RUB);
         // When
-        RestAccount result = closeAccount(account);
+        AccountResp result = closeAccount(account);
         // Then
         assertEquals(AccountState.CLOSED, result.getState());
     }

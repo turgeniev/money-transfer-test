@@ -15,7 +15,7 @@ class AccountStorage {
         final LockableAccount account = map.get(id);
 
         if (account == null) {
-            throw new NoSuchElementException("No account found for id: " + id);
+            throw new AccountNotFoundException(id);
         }
         return account;
     }

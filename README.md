@@ -1,11 +1,12 @@
 ## Money transfer application
 
 This is simple Web application that demonstrate transfer of money between accounts.
-
 It is implemented with minimal usage of frameworks.
-The only required dependency is [Netty](https://netty.io) for implementing basic http server.
+There is no authentication and information about accounts is stored in memory.
 
-No authentication is required and information about accounts is stored in memory.
+### Prerequisites
+
+Set `JAVA_HOME` to Java 11 runtime. 
 
 ### 1. How to build
 

@@ -1,9 +1,9 @@
 package com.revolut.http;
 
 import com.revolut.account.Application;
-import com.revolut.account.model.AccountID;
 import com.revolut.account.model.CurrencyType;
-import com.revolut.account.request.AccountRequestHandlerConfig;
+import com.revolut.account.resource.AccountResource;
+import com.revolut.account.resource.AccountResp;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
@@ -61,52 +61,52 @@ class HttpBase {
         throw new RuntimeException("Could not connect to http server.");
     }
 
-    static URI getAccountsUri(String subPath) {
+    private static URI getAccountsUri(String subPath) {
         return URI.create("http://localhost:" + Application.DEFAULT_PORT +
-                AccountRequestHandlerConfig.URL_PATH_PREFIX +
+                "/" + AccountResource.ACCOUNTS_PATH +
                 (subPath != null ? "/" + subPath : "")
         );
     }
 
-    RestAccount createAccount(CurrencyType currencyType) {
+    AccountResp createAccount(CurrencyType currencyType) {
         return client
                 .target(accountsUri)
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.json("{\"currencyType\":\"" + currencyType + "\"}"))
-                .readEntity(RestAccount.class);
+                .readEntity(AccountResp.class);
     }
 
-    RestAccount getAccount(RestAccount account) {
+    AccountResp getAccount(AccountResp account) {
         return client
-                .target(getAccountsUri(account.getId().toString()))
+                .target(getAccountsUri(account.getId()))
                 .request(MediaType.APPLICATION_JSON)
                 .get()
-                .readEntity(RestAccount.class);
+                .readEntity(AccountResp.class);
     }
 
-    RestAccount topUp(RestAccount account, long amount) {
-        return putAmount(account.getId().toString(), amount);
+    AccountResp topUp(AccountResp account, long amount) {
+        return putAmount(account.getId(), amount);
     }
 
-    RestAccount transfer(RestAccount from, RestAccount to, long amount) {
+    AccountResp transfer(AccountResp from, AccountResp to, long amount) {
         return putAmount(from.getId() + "/" + to.getId(), amount);
     }
 
-    RestAccount closeAccount(RestAccount account) {
-        return client.target(getAccountsUri(account.getId().toString()))
+    AccountResp closeAccount(AccountResp account) {
+        return client.target(getAccountsUri(account.getId()))
                 .request(MediaType.APPLICATION_JSON)
                 .delete()
-                .readEntity(RestAccount.class);
+                .readEntity(AccountResp.class);
     }
 
-    private RestAccount putAmount(String subPath, long amount) {
+    private AccountResp putAmount(String subPath, long amount) {
         return client.target(getAccountsUri(subPath))
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json("{\"amount\":" + amount + "}"))
-                .readEntity(RestAccount.class);
+                .readEntity(AccountResp.class);
     }
 
-    String transferS(RestAccount from, RestAccount to, long amount) {
+    String transferS(AccountResp from, AccountResp to, long amount) {
         return putAmountS(from.getId() + "/" + to.getId(), amount);
     }
 
